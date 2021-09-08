@@ -76,8 +76,14 @@ class UpdateAppCommand extends Command
                 $process = new Process(['mkdir', '-p', $dir]);
                 $this->runProcess($process, $output, $io, $verbose);
 
-                $process = new Process(['chmod', '0775', $dir]);
-                $this->runProcess($process, $output, $io, $verbose);
+                if (is_writable($dir)) {
+                    $process = new Process(['chmod', '0775', $dir]);
+                    $this->runProcess($process, $output, $io, $verbose);
+                }
+                else {
+                    $msg = sprintf("Can't chmod on directory '%s'", $dir);
+                    $output->writeln($msg);
+                }
             }
 
 
