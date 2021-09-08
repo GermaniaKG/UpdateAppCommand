@@ -74,10 +74,10 @@ class UpdateAppCommand extends Command
 
             foreach($this->directories as $dir) {
                 $process = new Process(['mkdir', '-p', $dir]);
-                $this->runProcess($process, $io, $verbose);
+                $this->runProcess($process, $output, $io, $verbose);
 
                 $process = new Process(['chmod', '0775', $dir]);
-                $this->runProcess($process, $io, $verbose);
+                $this->runProcess($process, $output, $io, $verbose);
             }
 
 
@@ -143,7 +143,7 @@ class UpdateAppCommand extends Command
     }
 
 
-    protected function runProcess( $process, $io, $verbose )
+    protected function runProcess( $process, $output, $io, $verbose )
     {
         try {
             $process->mustRun(function ($type, $buffer) {
