@@ -74,13 +74,13 @@ class UpdateAppCommand extends Command
 
             foreach($this->directories as $dir) {
                 $process = new Process(['mkdir', '-p', $dir]);
-                $process->mustRun($ofn);
-                $output->writeln($process->getOutput());
+                $this->runProcess($process, $io, $verbose);
 
                 $process = new Process(['chmod', '0775', $dir]);
-                $process->mustRun($ofn);
-                $output->writeln($process->getOutput());
+                $this->runProcess($process, $io, $verbose);
             }
+
+
 
 
             $io->section('Update from Git repo');
@@ -132,10 +132,32 @@ class UpdateAppCommand extends Command
 
 
         } catch (ProcessFailedException $e) {
-            $output->writeln($e->getMessage());
-            $output->writeln($e->getFile());
-            $output->writeln($e->getLine());
+            $io->newLine();
+            $io->error(array_filter([
+               get_class($e),
+               $e->getMessage(),
+               $verbose ? sprintf("Line %s in '%s'", $e->getLine(), $e->getFile()) : null
+            ]));
         }
         return Command::SUCCESS;
+    }
+
+
+    protected function runProcess( $process, $io, $verbose )
+    {
+        try {
+            $process->mustRun($ofn);
+            $output->writeln($process->getOutput());
+        }
+        catch(\Throwable $e) {
+            $io->newLine();
+            $io->error(array_filter([
+               get_class($e),
+               $e->getMessage(),
+               $verbose ? sprintf("Line %s in '%s'", $e->getLine(), $e->getFile()) : null
+            ]));
+
+        }
+
     }
 }
