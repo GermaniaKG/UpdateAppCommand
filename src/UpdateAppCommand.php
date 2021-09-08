@@ -146,7 +146,9 @@ class UpdateAppCommand extends Command
     protected function runProcess( $process, $io, $verbose )
     {
         try {
-            $process->mustRun($ofn);
+            $process->mustRun(function ($type, $buffer) {
+                echo $buffer;
+            });
             $output->writeln($process->getOutput());
         }
         catch(\Throwable $e) {
