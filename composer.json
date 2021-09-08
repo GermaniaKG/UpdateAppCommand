@@ -1,0 +1,56 @@
+{
+    "name": "germania-kg/update-command",
+    "description": "PHP Package boilerplate",
+
+    "authors": [{
+        "name": "Carsten Witt",
+        "email": "admin@germania-kg.com",
+        "role": "Developer"
+    }],
+
+    "license": "MIT",
+
+    "autoload": {
+        "psr-4": {
+            "Germania\\UpdateApp\\": "src/"
+        }
+    },
+
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "tests/src"
+        }
+    },
+
+    "require": {
+        "php": "^7.3|^8.0",
+        "psr/cache": "^1.0",
+        "symfony/console": "^5.0",
+        "symfony/process": "^5.3"
+    },
+
+    "require-dev": {
+        "symfony/cache": "^5.0",
+
+        "phpunit/phpunit": "^9.0",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "php-coveralls/php-coveralls": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "spatie/phpunit-watcher": "^1.0",
+        "phpstan/phpstan": "^0.12",
+        "laminas/laminas-log": "^2.0"
+    },
+
+    "scripts": {
+        "phpstan"     : "phpstan analyse --configuration phpstan.neon --no-progress -vvv",
+        "phpcs"       : "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes src/",
+        "phpcs-apply" : "php-cs-fixer fix -vv --allow-risky=yes src/",
+
+        "phpunit"     : "phpunit --coverage-text",
+
+        "test": [
+            "@phpcs",
+            "@phpunit"
+        ]
+    }
+}
