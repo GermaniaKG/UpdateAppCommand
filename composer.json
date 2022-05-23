@@ -37,7 +37,7 @@
         "php-coveralls/php-coveralls": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.0",
         "spatie/phpunit-watcher": "^1.0",
-        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan": "^1.0",
         "laminas/laminas-log": "^2.0"
     },
 

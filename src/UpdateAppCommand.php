@@ -2,7 +2,6 @@
 namespace Germania\UpdateApp;
 
 # https://symfony.com/doc/current/console/style.html#content-methods
-use function App\dotenv;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
@@ -28,6 +27,10 @@ class UpdateAppCommand extends Command
     protected $directories;
 
 
+
+    /**
+     * @param string[] $directories
+     */
     public function __construct( array $directories = array() )
     {
         $this->directories = $directories;
@@ -37,7 +40,7 @@ class UpdateAppCommand extends Command
 
 
     // Define a description, help message and the input options and arguments:
-    protected function configure()
+    protected function configure() : void
     {
         $this
             // the short description shown while running "php bin/console list"
@@ -53,7 +56,7 @@ class UpdateAppCommand extends Command
 
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $io = new SymfonyStyle($input, $output);
         $io->title('Update application');
@@ -149,7 +152,7 @@ class UpdateAppCommand extends Command
     }
 
 
-    protected function runProcess( $process, $output, $io, $verbose )
+    protected function runProcess( Process $process, OutputInterface $output, SymfonyStyle $io, bool $verbose ) : void
     {
         try {
             $process->mustRun(function ($type, $buffer) {
