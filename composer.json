@@ -24,18 +24,15 @@
 
     "require": {
         "php": "^7.3|^8.0",
-        "psr/cache": "^1.0",
-        "symfony/console": "^5.0",
-        "symfony/process": "^5.3"
+        "symfony/console": "^5.0|^6.0",
+        "symfony/process": "^5.3|^6.0"
     },
 
     "require-dev": {
-        "symfony/cache": "^5.0",
-
         "phpunit/phpunit": "^9.0",
         "phpspec/prophecy-phpunit": "^2.0",
         "php-coveralls/php-coveralls": "^2.0",
-        "friendsofphp/php-cs-fixer": "^2.0",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "spatie/phpunit-watcher": "^1.0",
         "phpstan/phpstan": "^1.0",
         "laminas/laminas-log": "^2.0"
