@@ -14,8 +14,6 @@ This package requires  the ***Symfony Console*** and ***Process*** components.
 
 ## Usage
 
-The ClearCacheCommand clears app cache directories and PSR Cache Item Pools:
-
 ```php
 use Germania\UpdateApp\UpdateAppCommand;
 
