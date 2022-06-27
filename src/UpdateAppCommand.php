@@ -29,11 +29,23 @@ class UpdateAppCommand extends Command
 
 
     /**
+     * @var callable
+     */
+    protected $process_factory;
+
+
+
+    /**
      * @param string[] $directories
      */
     public function __construct( array $directories = array() )
     {
         $this->directories = $directories;
+
+        $this->setProcessFactory(function(array $args) : Process {
+            return new Process($args);
+        });
+
         parent::__construct();
     }
 
@@ -54,7 +66,17 @@ class UpdateAppCommand extends Command
         ;
     }
 
+    public function setProcessFactory( callable $process_factory ) : self
+    {
+        $this->process_factory = $process_factory;
+        return $this;
+    }
 
+
+    public function testExecute(InputInterface $input, OutputInterface $output) : int
+    {
+        return $this->execute($input, $output);
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
@@ -76,11 +98,11 @@ class UpdateAppCommand extends Command
             }
 
             foreach($this->directories as $dir) {
-                $process = new Process(['mkdir', '-p', $dir]);
+                $process = ($this->process_factory)(['mkdir', '-p', $dir]);
                 $this->runProcess($process, $output, $io, $verbose);
 
                 if (is_writable($dir)) {
-                    $process = new Process(['chmod', '0775', $dir]);
+                    $process = ($this->process_factory)(['chmod', '0775', $dir]);
                     $this->runProcess($process, $output, $io, $verbose);
                 }
                 else {
@@ -94,7 +116,7 @@ class UpdateAppCommand extends Command
 
             $io->section('Update from Git repo');
             $update_args = array_filter(['git', 'pull', $verbose ? '-v' : null]);
-            $process = new Process($update_args);
+            $process = ($this->process_factory)($update_args);
             $process->mustRun($ofn);
             $output->writeln($process->getOutput());
 
@@ -109,7 +131,7 @@ class UpdateAppCommand extends Command
             if ($verbose) {
                 $composer_install_params[] = "-v";
             }
-            $process = new Process($composer_install_params);
+            $process = ($this->process_factory)($composer_install_params);
             $process->mustRun($ofn);
             $output->writeln($process->getOutput());
 
@@ -117,7 +139,7 @@ class UpdateAppCommand extends Command
 
             $io->section('Dump Composer autoloader');
 
-            $process = new Process(['composer', 'dump-autoload', '--optimize']);
+            $process = ($this->process_factory)(['composer', 'dump-autoload', '--optimize']);
             $process->mustRun($ofn);
             $output->writeln($process->getOutput());
 
@@ -126,15 +148,15 @@ class UpdateAppCommand extends Command
 
             $io->section('Git repo information');
             $git_remote_args = array_filter(['git', 'remote', $verbose ? '-v' : null]);
-            $process = new Process($git_remote_args);
+            $process = ($this->process_factory)($git_remote_args);
             $process->mustRun();
             $output->writeln($process->getOutput());
 
-            $process = new Process(['git', 'describe']);
+            $process = ($this->process_factory)(['git', 'describe']);
             $process->mustRun();
             $output->writeln($process->getOutput());
 
-            $process = new Process(['git', 'status']);
+            $process = ($this->process_factory)(['git', 'status']);
             $process->mustRun();
             $output->writeln($process->getOutput());
 
