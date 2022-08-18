@@ -34,13 +34,19 @@ class UpdateAppCommand extends Command
     protected $process_factory;
 
 
+    /**
+     * @var string
+     */
+    public $directory_chmod = '0775';
+
+
 
     /**
      * @param string[] $directories
      */
     public function __construct( array $directories = array() )
     {
-        $this->directories = $directories;
+        $this->setCacheDirectories($directories);
 
         $this->setProcessFactory(function(array $args) : Process {
             return new Process($args);
@@ -102,7 +108,7 @@ class UpdateAppCommand extends Command
                 $this->runProcess($process, $output, $io, $verbose);
 
                 if (is_writable($dir)) {
-                    $process = ($this->process_factory)(['chmod', '0775', $dir]);
+                    $process = ($this->process_factory)(['chmod', $this->directory_chmod, $dir]);
                     $this->runProcess($process, $output, $io, $verbose);
                 }
                 else {
@@ -192,5 +198,21 @@ class UpdateAppCommand extends Command
 
         }
 
+    }
+
+
+    /**
+     * @param string[] $directories
+     */
+    public function setCacheDirectories( array $directories ) : self
+    {
+        $this->directories = $directories;
+        return $this;
+    }
+
+    public function setDirectoryChmod( string $chmod ) : self
+    {
+        $this->directory_chmod = $chmod;
+        return $this;
     }
 }
