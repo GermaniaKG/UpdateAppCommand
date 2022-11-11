@@ -2,16 +2,9 @@
 namespace tests;
 
 use Germania\UpdateApp\UpdateAppCommand;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console;
+use Symfony\Component\Process;
 
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Prophecy;
 
 class UpdateAppCommandTest extends \PHPUnit\Framework\TestCase
@@ -24,7 +17,7 @@ class UpdateAppCommandTest extends \PHPUnit\Framework\TestCase
 
         $sut = new UpdateAppCommand($directories);
         $this->assertInstanceOf(UpdateAppCommand::class, $sut);
-        $this->assertInstanceOf(Command::class, $sut);
+        $this->assertInstanceOf(Console\Command\Command::class, $sut);
 
         return $sut;
     }
@@ -32,18 +25,30 @@ class UpdateAppCommandTest extends \PHPUnit\Framework\TestCase
     /**
      * @depends testInstantiation
      */
+    public function testProcessFactoryInterceptors( UpdateAppCommand $sut) : void
+    {
+        $fluid = $sut->setProcessFactory(fn() => new Process\Process(array()));
+
+        $this->assertSame($fluid, $sut);
+    }
+
+    /**
+     * @depends testInstantiation
+     */
     public function testSuccessfulExecution( UpdateAppCommand $sut) : void
     {
-        $input = new ArrayInput(array('--no-dev' => true), new InputDefinition([new InputOption('no-dev')]));
-        $output = new ConsoleOutput();
+        $application = new Console\Application();
+        $application->add($sut);
 
-        $sut->setProcessFactory(function($args) : Process {
-            return new Process(array());
-        });
+        $command_name = $sut->getName();
+        $command = $application->find($command_name);
 
-        $result = $sut->testExecute($input, $output);
-        $this->assertIsInt($result);
-        $this->assertEquals(Command::SUCCESS, $result);
+        $tester = new Console\Tester\CommandTester($command);
+        $tester->execute([
+            '--no-dev' => true
+        ]);
+
+        $tester->assertCommandIsSuccessful();
     }
 
 
