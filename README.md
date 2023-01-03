@@ -2,6 +2,8 @@
 
 <p align="center"><b>Symfony Console Command for updating a web app from CLI.</b></p>
 
+[![Tests](https://github.com/GermaniaKG/UpdateAppCommand/actions/workflows/php.yml/badge.svg)](https://github.com/GermaniaKG/UpdateAppCommand/actions/workflows/php.yml)
+
 ## Installation
 
 ```bash
