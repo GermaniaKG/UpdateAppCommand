@@ -41,13 +41,11 @@
     "scripts": {
         "phpstan" : "phpstan analyse",
 
-				"phpcs": [
-					"@phpcs:dry"
-				],
+				"phpcs"       : ["@phpcs:dry"],
 				"phpcs:dry"   : "php-cs-fixer fix --verbose --diff --dry-run",
 				"phpcs:apply" : "php-cs-fixer fix --verbose --diff",
 
-        "phpunit"     : "phpunit --coverage-text",
+        "phpunit" : "phpunit --testdox",
 
         "test": [
             "@phpcs",
