@@ -48,8 +48,10 @@ node_modules
 var/*
 logs/*
 tests/build/*
+
 phpunit.xml
-
-
+phpstan.neon
+.php-cs-fixer.php
+.php-cs-fixer.cache
 
 
