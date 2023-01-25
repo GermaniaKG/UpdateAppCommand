@@ -39,11 +39,13 @@
     },
 
     "scripts": {
-        "phpstan"     : "phpstan analyse --configuration phpstan.neon --no-progress -vvv",
-        "phpcs"       : "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes src/",
-        "phpcs-apply" : "php-cs-fixer fix -vv --allow-risky=yes src/",
+        "phpstan" : "phpstan analyse",
 
-        "phpunit"     : "phpunit --coverage-text",
+				"phpcs"       : ["@phpcs:dry"],
+				"phpcs:dry"   : "php-cs-fixer fix --verbose --diff --dry-run",
+				"phpcs:apply" : "php-cs-fixer fix --verbose --diff",
+
+        "phpunit" : "phpunit --testdox",
 
         "test": [
             "@phpcs",

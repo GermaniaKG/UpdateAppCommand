@@ -1,19 +1,31 @@
 <?php
+
+/**
+ * germania-kg/update-command
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace tests;
 
 use Germania\UpdateApp\UpdateAppCommand;
+use Prophecy;
 use Symfony\Component\Console;
 use Symfony\Component\Process;
 
-use Prophecy;
-
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class UpdateAppCommandTest extends \PHPUnit\Framework\TestCase
 {
     use Prophecy\PhpUnit\ProphecyTrait;
 
-    public function testInstantiation() : UpdateAppCommand
+    public function testInstantiation(): UpdateAppCommand
     {
-        $directories = array();
+        $directories = [];
 
         $sut = new UpdateAppCommand($directories);
         $this->assertInstanceOf(UpdateAppCommand::class, $sut);
@@ -25,9 +37,9 @@ class UpdateAppCommandTest extends \PHPUnit\Framework\TestCase
     /**
      * @depends testInstantiation
      */
-    public function testProcessFactoryInterceptors( UpdateAppCommand $sut) : void
+    public function testProcessFactoryInterceptors(UpdateAppCommand $sut): void
     {
-        $fluid = $sut->setProcessFactory(fn() => new Process\Process(array()));
+        $fluid = $sut->setProcessFactory(fn () => new Process\Process([]));
 
         $this->assertSame($fluid, $sut);
     }
@@ -35,7 +47,7 @@ class UpdateAppCommandTest extends \PHPUnit\Framework\TestCase
     /**
      * @depends testInstantiation
      */
-    public function testSuccessfulExecution( UpdateAppCommand $sut) : void
+    public function testSuccessfulExecution(UpdateAppCommand $sut): void
     {
         $application = new Console\Application();
         $application->add($sut);
@@ -45,11 +57,9 @@ class UpdateAppCommandTest extends \PHPUnit\Framework\TestCase
 
         $tester = new Console\Tester\CommandTester($command);
         $tester->execute([
-            '--no-dev' => true
+            '--no-dev' => true,
         ]);
 
         $tester->assertCommandIsSuccessful();
     }
-
-
 }
